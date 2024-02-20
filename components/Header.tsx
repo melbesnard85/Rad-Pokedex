@@ -28,9 +28,9 @@ export const Header = () => {
             <Link href="/" passHref>
               <Image
                 priority
-                src="/img/josephmark-pokemon.png"
+                src="/img/rad-pokemon.png"
                 alt="Josephmark"
-                width="114"
+                width="64"
                 height="32"
               />
             </Link>
@@ -97,9 +97,9 @@ export const Header = () => {
               <div className="md:hidden">
                 <Link href="/" passHref>
                   <Image
-                    src="/img/josephmark-pokemon.png"
+                    src="/img/rad-pokemon.png"
                     alt="Josephmark"
-                    width="114"
+                    width="64"
                     height="32"
                   />
                 </Link>
