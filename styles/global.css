@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  -webkit-font-smoothing: antialiased; /* https://www.joshwcomeau.com/css/custom-css-reset/#digit-font-smoothing */
+  font-weight: 700;
+  background-attachment: fixed;
+  @apply bg-wild;
+  @apply text-mine;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  left: -195px;
+  bottom: 0;
+  background-image: url("/img/pikachu.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: left bottom;
+  height: 90%;
+  width: 150%;
+  pointer-events: none;
+}
+
+@media screen(md) {
+  body::before {
+    left: 40px;
+  }
+}
+
+html {
+  @apply scroll-smooth;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+}
+
+@keyframes rise {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+@layer utilities {
+  .bg-pikachu {
+    background-image: url("/img/pikachu.png");
+    background-repeat: no-repeat;
+    background-size: auto 90%;
+    background-position: -195px bottom;
+    background-attachment: fixed;
+  }
+  .pixel-art {
+    image-rendering: pixelated;
+  }
+  .animate-fade-in {
+    animation: fade-in 0.3s;
+  }
+  .animate-rise {
+    animation: rise 0.4s ease-out backwards;
+  }
+  .animate-delay-150 {
+    animation-delay: 150ms;
+  }
+}
+
+.mobile-menu-opener {
+  @apply p-10;
+  @apply bg-transparent;
+  @apply appearance-none;
+  @apply w-16;
+  @apply h-16;
+  @apply relative;
+  @apply -m-2.5;
+  @apply ml-0;
+  @apply z-20;
+}
+.mobile-menu-opener::before,
+.mobile-menu-opener::after {
+  content: "";
+  width: 31px;
+  height: 3px;
+  border-radius: 5px;
+  background-color: currentColor;
+  display: block;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  transition-property: transform, top;
+  transition-duration: 0.35s;
+  transition-timing-function: cubic-bezier(0.65, 2.35, 0.03, 0.71);
+}
+.mobile-menu-opener::before {
+  top: calc(50% - 5px);
+}
+.mobile-menu-opener::after {
+  top: calc(50% + 5px);
+}
+.mobile-menu-opener[aria-expanded="true"]::before {
+  top: 50%;
+  transform: translateX(-50%) rotate(45deg);
+}
+.mobile-menu-opener[aria-expanded="true"]::after {
+  top: 50%;
+  transform: translateX(-50%) rotate(-45deg);
+}

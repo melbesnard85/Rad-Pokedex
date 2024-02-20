@@ -1,0 +1,21 @@
+{
+  "background_color": "#333333",
+  "theme_color": "#333333",
+  "name": "Pokemon Team Builder",
+  "short_name": "PKMN Party",
+  "start_url": "/",
+  "description": "Create your dream team of Gen. 1 Pokemon",
+  "icons": [
+    {
+      "src": "/img/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/img/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "display": "minimal-ui"
+}
