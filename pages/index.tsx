@@ -71,11 +71,16 @@ export default function Home({
     }
   }, [inView, fetchNextPage, hasNextPage])
 
+  const pokemonCount = pokemons.pages.reduce(
+    (total, page) => total + page.pokemon.length,
+    0
+  )
+
   return (
     <Container>
       <Grid className="items-start">
-        <div className="col-span-full lg:col-start-2 lg:col-span-2 flex flex-col lg:min-h-[calc(100vh-300px)]">
-          <div className="flex-grow flex items-center relative">
+        <div className="lg:sticky top-5 col-span-full lg:col-start-2 lg:col-span-2 flex flex-col lg:min-h-[calc(100vh-300px)]">
+          <div className="flex-grow flex items-start mt-40 relative">
             <H1>
               Choose <br />
               your team
@@ -99,15 +104,19 @@ export default function Home({
                 )
               })}
           </Grid>
-          {isFetchingNextPage ? (
-            <div className="flex items-center justify-center">
-              <Loader size="40px" stroke="#76B0A7" />
+          <div className="fixed bottom-0 z-30 left-0 right-0 flex justify-center items-center gap-4 w-full">
+            <div className="text-center my-5 text-[1.5rem] rounded-full bg-[#98CABC] px-5 text-white shadow-card flex items-center h-10 gap-2">
+              {isFetchingNextPage ? (
+                <div className="flex items-center justify-center">
+                  <Loader size="20px" stroke="#FFF" />
+                </div>
+              ) : (
+                <div>{pokemonCount}</div>
+              )}
+              <div>/</div>
+              <div>{totalPokemon}</div>
             </div>
-          ) : (
-            <div className="text-center my-5 text-[1.5rem]">
-              {pokemon.length}/{totalPokemon}
-            </div>
-          )}
+          </div>
         </div>
         <div className="col-span-full row-start-2 lg:row-start-1 lg:col-span-1 lg:col-start-11 lg:sticky top-5 grid grid-cols-6 lg:grid-cols-1 gap-7">
           {Array(PARTY_LENGTH)
