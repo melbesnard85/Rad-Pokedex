@@ -1,9 +1,11 @@
 import type { AppProps } from "next/app"
 import Head from "next/head"
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 import "../styles/global.css"
 
 import Layout from "../components/Layout"
+import QueryProvider from "../providers/QueryProvider"
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -17,9 +19,12 @@ function MyApp({ Component, pageProps }: AppProps) {
 
         <link rel="prefetch" href="/img/pokeball-loader.gif" />
       </Head>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <QueryProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+        <ReactQueryDevtools />
+      </QueryProvider>
     </>
   )
 }

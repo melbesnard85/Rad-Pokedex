@@ -9,4 +9,5 @@ export type CleanPokemon = {
   id: number
   types: string[]
   image: string
+  innerRef?: (node ?: Element | null | undefined) => void
 }

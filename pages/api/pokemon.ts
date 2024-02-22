@@ -65,10 +65,11 @@ export async function getPokemon(page = 1, pageSize = PAGE_SIZE) {
   const { data } = await resp.json()
   const [generation] = data.generation
   return {
+    nextPage: page + 1,
     pokemon: generation.pokemon.map(stripPokemonData),
     totalPokemon:
       data.generationAggregate.nodes[0].pokemonAggregate.aggregate.count,
-  } as { pokemon: CleanPokemon[]; totalPokemon: number }
+  } as { nextPage: number; pokemon: CleanPokemon[]; totalPokemon: number }
 }
 
 export default async function handler(

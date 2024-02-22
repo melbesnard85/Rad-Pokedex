@@ -1,5 +1,8 @@
 import Image from "next/image"
 import Link from "next/link"
+import { useInfiniteQuery } from "@tanstack/react-query"
+import { useInView } from "react-intersection-observer"
+
 import Card from "../components/Card"
 import Container from "../components/Container"
 import Grid from "../components/Grid"
@@ -7,6 +10,9 @@ import ArrowRightIcon from "../icons/ArrowRight"
 import ScrollIcon from "../icons/Scroll"
 import { H1, P } from "../styles/Type"
 import { CleanPokemon } from "../types/Pokemon"
+import { useEffect, useState } from "react"
+import { getPokemon } from "./api/pokemon"
+import Loader from "../components/Loader"
 
 export async function getStaticProps() {
   const { getPokemon } = await import("./api/pokemon")
@@ -28,6 +34,35 @@ export default function Home({
   totalPokemon: number
 }) {
   // TODO: Infinite scroll pagination
+  const { ref, inView } = useInView()
+
+  const {
+    data: pokemons,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isSuccess,
+  } = useInfiniteQuery({
+    queryKey: ["pokemons"],
+    queryFn: ({ pageParam }) => {
+      return getPokemon(pageParam)
+    },
+    initialData: () => ({  //set data from getStaticProps as intialData
+      pages: [{ pokemon: pokemon, nextPage: 2, totalPokemon: totalPokemon }],
+      pageParams: [1],
+    }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      return lastPage.nextPage
+    },
+  })
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage()
+    }
+  }, [inView, fetchNextPage, hasNextPage])
+
   return (
     <Container>
       <Grid className="items-start">
@@ -45,13 +80,26 @@ export default function Home({
         </div>
         <div className="col-span-full lg:col-span-6">
           <Grid>
-            {pokemon?.map((mon) => (
-              <Card key={mon.id} {...mon} />
-            ))}
+            {isSuccess &&
+              pokemons?.pages?.map((page) => {
+                return page?.pokemon?.map((mon, index) =>
+                  index === page.pokemon.length - 1 ? (
+                    <Card innerRef={ref} key={mon.id} {...mon} />
+                  ) : (
+                    <Card key={mon.id} {...mon} />
+                  )
+                )
+              })}
           </Grid>
-          <div className="text-center my-5 text-[1.5rem]">
-            {pokemon.length}/{totalPokemon}
-          </div>
+          {isFetchingNextPage ? (
+            <div className="flex items-center justify-center">
+              <Loader size="40px" stroke="#76B0A7" />
+            </div>
+          ) : (
+            <div className="text-center my-5 text-[1.5rem]">
+              {pokemon.length}/{totalPokemon}
+            </div>
+          )}
         </div>
         <div className="col-span-full row-start-2 lg:row-start-1 lg:col-span-1 lg:col-start-11 lg:sticky top-5 grid grid-cols-6 lg:grid-cols-1 gap-7">
           {Array(6)

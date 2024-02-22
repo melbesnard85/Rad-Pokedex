@@ -5,9 +5,9 @@ import { H2 } from "../styles/Type"
 import { CleanPokemon } from "../types/Pokemon"
 
 // TODO: Card Styling
-export default function Card({ id, name, types, image }: CleanPokemon) {
+export default function Card({ id, name, types, image, innerRef }: CleanPokemon) {
   return (
-    <article className="col-span-6 lg:col-span-4 relative">
+    <article ref={innerRef} className="col-span-6 lg:col-span-4 relative">
       {/* TODO: Handle adding to party */}
       <button
         type="button"
