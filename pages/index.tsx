@@ -131,6 +131,7 @@ export default function Home({
                         ? pokemonsParties[i].image
                         : "/img/placeholder-ball.png"
                     }
+                    title={pokemonsParties[i] ? pokemonsParties[i].name : ""}
                     alt=""
                     width="83"
                     height="83"
