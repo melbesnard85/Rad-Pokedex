@@ -4,19 +4,55 @@ import Container from "../components/Container"
 import Grid from "../components/Grid"
 import ArrowRightIcon from "../icons/ArrowRight"
 import { H1, H3 } from "../styles/Type"
+import { useSelector } from "react-redux"
+import { PARTY_LENGTH, selectPokemonsParties } from "../services/party"
+import { useEffect, useState } from "react"
+import Card, { CARDTYPE } from "../components/Card"
 
 export default function PartyPage() {
+  const pokemonsParties = useSelector(selectPokemonsParties)
+  const [clientLoad, setClientLoad] = useState<boolean>(false)
+
+  useEffect(() => {
+    setClientLoad(true)
+  }, [])
+
   return (
     <Container className="relative">
       <Grid>
-        <div>
-          <H1>
-            Choose <br />
-            your team
-          </H1>
+        <div className="col-span-full lg:col-start-2 lg:col-span-2 flex flex-col lg:min-h-[calc(100vh-300px)]">
+          <div className="flex-grow flex items-center relative">
+            <H1>
+              Ash's <br />
+              party
+            </H1>
+          </div>
+        </div>
+        <div className="col-span-full lg:col-span-6">
+          <Grid>
+            {Array(PARTY_LENGTH)
+              .fill("")
+              .map(
+                (_, i) =>
+                  clientLoad && (
+                    <Card
+                      key={i}
+                      type={
+                        pokemonsParties[i] ? CARDTYPE.PARTY : CARDTYPE.EMPTY
+                      }
+                      {...pokemonsParties[i]}
+                    />
+                  )
+              )}
+          </Grid>
+          {clientLoad && pokemonsParties.length === 0 && (
+            <div className="flex items-center justify-center h-full">
+              No pokemons
+            </div>
+          )}
         </div>
         <div className="col-start-11 text-center">
-          <H3 as="p">0/6</H3>
+          <H3 as="p">{`${pokemonsParties.length}/${PARTY_LENGTH}`}</H3>
           <Link
             href="/"
             passHref

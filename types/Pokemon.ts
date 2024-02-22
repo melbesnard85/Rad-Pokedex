@@ -1,3 +1,5 @@
+import { CARDTYPE } from "../components/Card"
+
 export type RawPokemon = {
   name: string
   id: number
@@ -5,9 +7,10 @@ export type RawPokemon = {
 }
 
 export type CleanPokemon = {
-  name: string
   id: number
+  type?: CARDTYPE
+  name: string
   types: string[]
   image: string
-  innerRef?: (node ?: Element | null | undefined) => void
+  innerRef?: (node?: Element | null | undefined) => void
 }
