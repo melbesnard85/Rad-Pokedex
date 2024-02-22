@@ -13,6 +13,8 @@ import { CleanPokemon } from "../types/Pokemon"
 import { useEffect, useState } from "react"
 import { getPokemon } from "./api/pokemon"
 import Loader from "../components/Loader"
+import { useSelector } from "react-redux"
+import { PARTY_LENGTH, selectPokemonsParties } from "../services/party"
 
 export async function getStaticProps() {
   const { getPokemon } = await import("./api/pokemon")
@@ -35,6 +37,8 @@ export default function Home({
 }) {
   // TODO: Infinite scroll pagination
   const { ref, inView } = useInView()
+  const pokemonsParties = useSelector(selectPokemonsParties)
+  const [clientLoad, setClientLoad] = useState<boolean>(false)
 
   const {
     data: pokemons,
@@ -47,7 +51,8 @@ export default function Home({
     queryFn: ({ pageParam }) => {
       return getPokemon(pageParam)
     },
-    initialData: () => ({  //set data from getStaticProps as intialData
+    initialData: () => ({
+      //set data from getStaticProps as intialData
       pages: [{ pokemon: pokemon, nextPage: 2, totalPokemon: totalPokemon }],
       pageParams: [1],
     }),
@@ -57,6 +62,9 @@ export default function Home({
     },
   })
 
+  useEffect(() => {
+    setClientLoad(true)
+  }, [])
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage()
@@ -102,18 +110,26 @@ export default function Home({
           )}
         </div>
         <div className="col-span-full row-start-2 lg:row-start-1 lg:col-span-1 lg:col-start-11 lg:sticky top-5 grid grid-cols-6 lg:grid-cols-1 gap-7">
-          {Array(6)
+          {Array(PARTY_LENGTH)
             .fill("")
-            .map((_, i) => (
-              <Image
-                key={i}
-                src="/img/placeholder-ball.png"
-                alt=""
-                width="83"
-                height="83"
-                className="opacity-40"
-              />
-            ))}
+            .map(
+              (_, i) =>
+                clientLoad && (
+                  <Image
+                    key={i}
+                    src={
+                      pokemonsParties[i]
+                        ? pokemonsParties[i].image
+                        : "/img/placeholder-ball.png"
+                    }
+                    alt=""
+                    width="83"
+                    height="83"
+                    className="opacity-40"
+                    unoptimized
+                  />
+                )
+            )}
           <div>
             <Link
               href="/party"

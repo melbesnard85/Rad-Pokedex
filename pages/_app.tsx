@@ -1,11 +1,13 @@
 import type { AppProps } from "next/app"
 import Head from "next/head"
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { Provider as StoreProvider } from "react-redux"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
 import "../styles/global.css"
 
 import Layout from "../components/Layout"
 import QueryProvider from "../providers/QueryProvider"
+import store from "../services"
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -19,12 +21,15 @@ function MyApp({ Component, pageProps }: AppProps) {
 
         <link rel="prefetch" href="/img/pokeball-loader.gif" />
       </Head>
-      <QueryProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-        <ReactQueryDevtools />
-      </QueryProvider>
+
+      <StoreProvider store={store}>
+        <QueryProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+          <ReactQueryDevtools />
+        </QueryProvider>
+      </StoreProvider>
     </>
   )
 }

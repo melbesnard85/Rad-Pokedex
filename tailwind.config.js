@@ -64,6 +64,9 @@ module.exports = {
         md: "10px 10px 20px rgba(0,0,0,0.05), -10px -10px 4px rgba(255,255,255,0.2)",
         lg: "10px 15px 22px rgba(0,0,0,0.12). =8px -8px 4px rgba(255,255,255,0.3)",
       },
+      boxShadow: {
+        card: "10px 10px 20px 0px #0000000D",
+      },
       transitionDelay: {
         0: "0ms",
       },
