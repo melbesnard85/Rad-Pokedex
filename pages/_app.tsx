@@ -3,6 +3,7 @@ import Head from "next/head"
 import { Provider as StoreProvider } from "react-redux"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
+import "../styles/font.css"
 import "../styles/global.css"
 
 import Layout from "../components/Layout"

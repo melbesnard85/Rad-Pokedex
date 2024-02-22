@@ -29,6 +29,7 @@ module.exports = {
     fontFamily: {
       sans: ["work-sans", "sans-serif"],
       serif: ["moret", "serif"],
+      lora: ["Lora"]
     },
     extend: {
       colors: {
