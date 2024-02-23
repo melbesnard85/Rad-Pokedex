@@ -128,7 +128,7 @@ export default function Home({
                   <Image
                     key={i}
                     src={
-                      pokemonsParties[i]
+                      pokemonsParties[i].isExist
                         ? pokemonsParties[i].image
                         : "/img/placeholder-ball.png"
                     }
