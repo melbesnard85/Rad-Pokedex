@@ -81,7 +81,7 @@ export default function Home({
     <Container>
       <Grid className="items-start">
         <div className="lg:sticky top-5 col-span-full lg:col-start-2 lg:col-span-2 flex flex-col lg:min-h-[calc(100vh-300px)]">
-          <div className="flex-grow flex items-start mt-40 relative">
+          <div className="flex-grow flex items-start lg:mt-40 relative">
             <H1>
               Choose <br />
               your team
