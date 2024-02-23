@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import Image from "next/image"
@@ -20,8 +20,13 @@ const navItems = [
 export const Header = () => {
   const router = useRouter()
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    setOpen(false)
+  }, [router])
+
   return (
-    <header className="h-20 mb-10 lg:mb-24 bg-mine text-white text-opacity-60">
+    <header className="sticky top-0 z-50 h-20 mb-10 lg:mb-24 bg-mine text-white text-opacity-60">
       <Container className="h-full">
         <div className="flex h-full items-center">
           <div className="flex-grow mt-3">
