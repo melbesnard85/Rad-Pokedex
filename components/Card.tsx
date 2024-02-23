@@ -33,10 +33,10 @@ export default function Card({
   const dispatch = useDispatch()
   const pokemonsParties = useSelector(selectPokemonsParties)
 
-  const [isExistItem, setIsExistItem] = useState<ExtendedCleanPokemon>()
+  const [storedItem, setStoredItem] = useState<ExtendedCleanPokemon>()
 
   useLayoutEffect(() => {
-    setIsExistItem(pokemonsParties.find((item) => item.id === id))
+    setStoredItem(pokemonsParties.find((item) => item.id === id))
   }, [pokemonsParties, id])
 
   return (
@@ -75,7 +75,10 @@ export default function Card({
         width="150"
         height="150"
         unoptimized
-        onClick={() => type === CARDTYPE.LIST && dispatch(setPokemon({ id, name, types, image }))}
+        onClick={() =>
+          type === CARDTYPE.LIST &&
+          dispatch(setPokemon({ id, name, types, image }))
+        }
       />
 
       {type === CARDTYPE.EMPTY ? (
@@ -91,7 +94,7 @@ export default function Card({
         <div
           className={clsx(
             "relative rounded-xl text-center flex flex-col item-center justify-end h-[200px] shadow-card overflow-hidden p-2",
-            isExistItem
+            storedItem && storedItem.isExist
               ? "border-4 border-[#107B6A]/40 bg-[#F3FFF4]"
               : "border-2 border-white bg-[#F9F9F9]",
             type === CARDTYPE.PARTY && "bg-[#F9F9F9]"
@@ -106,8 +109,8 @@ export default function Card({
               >
                 #{id.toString().padStart(3, "0")}
               </div>
-              {type === CARDTYPE.PARTY && isExistItem ? (
-                <EditName {...isExistItem} />
+              {type === CARDTYPE.PARTY && storedItem ? (
+                <EditName {...storedItem} />
               ) : (
                 <H2>{name}</H2>
               )}
@@ -128,7 +131,7 @@ export default function Card({
                 </ul>
               </div>
               <div className="text-xs text-[#00000099] font-thin">
-                Added to 3 parties
+                {`Added to ${storedItem?.addedCount || 0} parties`}
               </div>
             </div>
           )}
