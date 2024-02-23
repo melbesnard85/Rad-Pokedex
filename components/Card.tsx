@@ -3,10 +3,17 @@ import Image from "next/image"
 
 import { H2 } from "../styles/Type"
 import { CleanPokemon } from "../types/Pokemon"
-import { useLayoutEffect, useState } from "react"
+import { useCallback, useEffect, useLayoutEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { selectPokemonsParties, setPokemon } from "../services/party"
+import {
+  ExtendedCleanPokemon,
+  selectPokemonsParties,
+  setNickName,
+  setPokemon,
+} from "../services/party"
 import CloseIcon from "../icons/Close"
+import CheckIcon from "../icons/Check"
+import EditIcon from "../icons/Edit"
 
 export enum CARDTYPE {
   LIST = "list",
@@ -26,10 +33,10 @@ export default function Card({
   const dispatch = useDispatch()
   const pokemonsParties = useSelector(selectPokemonsParties)
 
-  const [isExisting, setIsExisting] = useState<boolean>(false)
+  const [isExistItem, setIsExistItem] = useState<ExtendedCleanPokemon>()
 
   useLayoutEffect(() => {
-    setIsExisting(!!pokemonsParties.find((item) => item.id === id))
+    setIsExistItem(pokemonsParties.find((item) => item.id === id))
   }, [pokemonsParties, id])
 
   return (
@@ -68,7 +75,7 @@ export default function Card({
         width="150"
         height="150"
         unoptimized
-        onClick={() => dispatch(setPokemon({ id, name, types, image }))}
+        onClick={() => type === CARDTYPE.LIST && dispatch(setPokemon({ id, name, types, image }))}
       />
 
       {type === CARDTYPE.EMPTY ? (
@@ -84,7 +91,7 @@ export default function Card({
         <div
           className={clsx(
             "relative rounded-xl text-center flex flex-col item-center justify-end h-[200px] shadow-card overflow-hidden p-2",
-            isExisting
+            isExistItem
               ? "border-4 border-[#107B6A]/40 bg-[#F3FFF4]"
               : "border-2 border-white bg-[#F9F9F9]",
             type === CARDTYPE.PARTY && "bg-[#F9F9F9]"
@@ -99,16 +106,11 @@ export default function Card({
               >
                 #{id.toString().padStart(3, "0")}
               </div>
-              <div>
-                <H2
-                  className={clsx(
-                    type === CARDTYPE.PARTY &&
-                      "underline underline-offset-8 decoration-dashed"
-                  )}
-                >
-                  {name}
-                </H2>
-              </div>
+              {type === CARDTYPE.PARTY && isExistItem ? (
+                <EditName {...isExistItem} />
+              ) : (
+                <H2>{name}</H2>
+              )}
               <div>
                 <ul className="flex gap-2">
                   {types.map((type) => (
@@ -133,5 +135,52 @@ export default function Card({
         </div>
       )}
     </article>
+  )
+}
+
+const EditName = ({ id, nickName }: ExtendedCleanPokemon): JSX.Element => {
+  const dispatch = useDispatch()
+  const [isEdit, setIsEdit] = useState<boolean>(false)
+  const [input, setInput] = useState<string>(nickName)
+
+  const handleCheck = useCallback(() => {
+    dispatch(setNickName({ id, nickName: input }))
+    setIsEdit(false)
+  }, [id, nickName, input, dispatch])
+
+  useEffect(() => {
+    setInput(nickName)
+  }, [id, nickName])
+
+  return (
+    <>
+      {isEdit ? (
+        <div className="z-30 relative px-1 flex items-center justify-center gap-1 w-full">
+          <div className="underline underline-offset-8 decoration-dashed w-full">
+            <input
+              type="text"
+              className="min-w-0 max-w-[140px] px-1"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+            />
+          </div>
+          <div className="flex items-center gap-1">
+            <button onClick={() => setIsEdit(false)}>
+              <CloseIcon />
+            </button>
+            <button onClick={handleCheck}>
+              <CheckIcon />
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="z-30 relative px-1 flex items-center justify-center">
+          <div className="">{input}</div>
+          <button className="absolute -right-3" onClick={() => setIsEdit(true)}>
+            <EditIcon />
+          </button>
+        </div>
+      )}
+    </>
   )
 }

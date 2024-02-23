@@ -5,33 +5,75 @@ import { AppStore } from ".."
 
 export const PARTY_LENGTH = 6
 
+export type ExtendType = {
+  nickName: string
+  addedCount: number
+  isAdded: boolean
+}
+
+export type ExtendedCleanPokemon = CleanPokemon & ExtendType
+
 export type PartyStore = {
-  pokemons: CleanPokemon[]
+  pokemons: ExtendedCleanPokemon[]
 }
 
 const initialState: PartyStore = {
-  pokemons: LocalStorage.get<CleanPokemon[]>(PATY_STORAGE, []),
+  pokemons: LocalStorage.get<ExtendedCleanPokemon[]>(PATY_STORAGE, []),
 }
 
 const partySlice = createSlice({
   name: "property",
   initialState,
   reducers: {
+    setNickName: (state, action) => {
+      const { pokemons } = state
+      const { id, nickName } = action.payload
+      const updatedPokemons = pokemons.map((pokemon) => {
+        if (pokemon.id === id) {
+          pokemon.nickName = nickName
+        }
+        return pokemon
+      })
+      LocalStorage.set<ExtendedCleanPokemon[]>(PATY_STORAGE, updatedPokemons)
+      state.pokemons = updatedPokemons
+    },
     setPokemon: (state, action) => {
       const { pokemons } = state
       const { id, name, types, image } = action.payload
 
       const pokemonInParty = pokemons.some((pokemon) => pokemon.id === id)
       if (pokemonInParty) {
-        // Pokemon is already in party, so remove it
-        const updatedParties = pokemons.filter((pokemon) => pokemon.id !== id)
-        LocalStorage.set<CleanPokemon[]>(PATY_STORAGE, updatedParties)
+        const updatedParties = pokemons.map((pokemon) => {
+          if (pokemon.id === id) {
+            if (!pokemon.isAdded) {
+              pokemon.addedCount++
+            }
+            pokemon.isAdded = !pokemon.isAdded
+          }
+          return pokemon
+        })
+
+        LocalStorage.set<ExtendedCleanPokemon[]>(PATY_STORAGE, updatedParties)
         state.pokemons = updatedParties
       } else {
-        // Pokemon is not in party, so add it
-        if (state.pokemons.length < PARTY_LENGTH) {
-          const newParty = [...state.pokemons, { id, name, types, image }]
-          LocalStorage.set<CleanPokemon[]>(PATY_STORAGE, newParty)
+        const totaladdedCount = state.pokemons.filter(
+          (pokemon) => pokemon.isAdded
+        ).length
+
+        if (totaladdedCount < PARTY_LENGTH) {
+          const newParty = [
+            ...state.pokemons,
+            {
+              id,
+              name,
+              types,
+              image,
+              nickName: name,
+              addedCount: 0,
+              isAdded: true,
+            },
+          ]
+          LocalStorage.set<ExtendedCleanPokemon[]>(PATY_STORAGE, newParty)
           state.pokemons = newParty
         }
       }
@@ -39,8 +81,9 @@ const partySlice = createSlice({
   },
 })
 
-export const { setPokemon } = partySlice.actions
+export const { setNickName, setPokemon } = partySlice.actions
 
-export const selectPokemonsParties = (state: AppStore) => state.party.pokemons
+export const selectPokemonsParties = (state: AppStore) =>
+  state.party.pokemons.filter((pokemon) => pokemon.isAdded)
 
 export default partySlice.reducer
