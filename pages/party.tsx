@@ -12,10 +12,15 @@ import Card, { CARDTYPE } from "../components/Card"
 export default function PartyPage() {
   const pokemonsParties = useSelector(selectPokemonsParties)
   const [pokemonCount, setPokemonCount] = useState<number>(0)
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
-    setPokemonCount(pokemonsParties.filter((pokemon) => pokemon.isExist).length)
+    setPokemonCount(pokemonsParties.filter((item) => item.isExist).length)
   }, [pokemonsParties])
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   return (
     <Container className="relative">
@@ -38,7 +43,7 @@ export default function PartyPage() {
               .fill("")
               .map(
                 (_, i) =>
-                  pokemonCount > 0 && (
+                  isClient && (
                     <Card
                       key={i}
                       type={
@@ -51,11 +56,6 @@ export default function PartyPage() {
                   )
               )}
           </Grid>
-          {pokemonCount === 0 && (
-            <div className="flex items-center justify-center h-full">
-              No pokemons
-            </div>
-          )}
         </div>
         <div className="col-start-11 text-center flex flex-col items-center justify-between">
           <H3
