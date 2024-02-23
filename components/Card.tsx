@@ -35,7 +35,7 @@ export default function Card({
 
   const [storedItem, setStoredItem] = useState<ExtendedCleanPokemon>()
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setStoredItem(pokemonsParties.find((item) => item.id === id))
   }, [pokemonsParties, id])
 
