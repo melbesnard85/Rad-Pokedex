@@ -38,7 +38,7 @@ export default function PartyPage() {
                     <Card
                       key={i}
                       type={
-                        pokemonsParties[i] ? CARDTYPE.PARTY : CARDTYPE.EMPTY
+                        pokemonsParties[i]?.isExist ? CARDTYPE.PARTY : CARDTYPE.EMPTY
                       }
                       {...pokemonsParties[i]}
                     />
