@@ -7,7 +7,7 @@ export const H1 = createStyle(
 
 export const H2 = createStyle(
   "h2",
-  "font-lora text-[1.5rem] lg:text-[2rem] leading-[1.15] font-medium" // 32px / 24px
+  "font-lora text-[1rem] lg:text-[1.5rem] leading-[1.15] font-medium" // 32px / 24px
 )
 
 export const H3 = createStyle(

@@ -11,11 +11,11 @@ import Card, { CARDTYPE } from "../components/Card"
 
 export default function PartyPage() {
   const pokemonsParties = useSelector(selectPokemonsParties)
-  const [clientLoad, setClientLoad] = useState<boolean>(false)
+  const [pokemonCount, setPokemonCount] = useState<number>(0)
 
   useEffect(() => {
-    setClientLoad(true)
-  }, [])
+    setPokemonCount(pokemonsParties.length)
+  }, [pokemonsParties])
 
   return (
     <Container className="relative">
@@ -34,7 +34,7 @@ export default function PartyPage() {
               .fill("")
               .map(
                 (_, i) =>
-                  clientLoad && (
+                  pokemonCount > 0 && (
                     <Card
                       key={i}
                       type={
@@ -45,14 +45,14 @@ export default function PartyPage() {
                   )
               )}
           </Grid>
-          {clientLoad && pokemonsParties.length === 0 && (
+          {pokemonCount === 0 && (
             <div className="flex items-center justify-center h-full">
               No pokemons
             </div>
           )}
         </div>
         <div className="col-start-11 text-center">
-          <H3 as="p">{`${pokemonsParties.length}/${PARTY_LENGTH}`}</H3>
+          <H3 as="p">{`${pokemonCount}/${PARTY_LENGTH}`}</H3>
           <Link
             href="/"
             passHref

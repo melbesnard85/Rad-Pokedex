@@ -38,7 +38,7 @@ export default function Home({
   // TODO: Infinite scroll pagination
   const { ref, inView } = useInView()
   const pokemonsParties = useSelector(selectPokemonsParties)
-  const [clientLoad, setClientLoad] = useState<boolean>(false)
+  const [pokemonCount, setPokemonCount] = useState<number>(0)
 
   const {
     data: pokemons,
@@ -63,15 +63,16 @@ export default function Home({
   })
 
   useEffect(() => {
-    setClientLoad(true)
-  }, [])
+    setPokemonCount(pokemonsParties.length)
+  }, [pokemonsParties])
+
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage()
     }
   }, [inView, fetchNextPage, hasNextPage])
 
-  const pokemonCount = pokemons.pages.reduce(
+  const currentPokemonCount = pokemons.pages.reduce(
     (total, page) => total + page.pokemon.length,
     0
   )
@@ -111,7 +112,7 @@ export default function Home({
                   <Loader size="20px" stroke="#FFF" />
                 </div>
               ) : (
-                <div>{pokemonCount}</div>
+                <div>{currentPokemonCount}</div>
               )}
               <div>/</div>
               <div>{totalPokemon}</div>
@@ -123,7 +124,7 @@ export default function Home({
             .fill("")
             .map(
               (_, i) =>
-                clientLoad && (
+                pokemonCount > 0 && (
                   <Image
                     key={i}
                     src={
