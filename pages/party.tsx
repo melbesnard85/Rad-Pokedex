@@ -14,18 +14,22 @@ export default function PartyPage() {
   const [pokemonCount, setPokemonCount] = useState<number>(0)
 
   useEffect(() => {
-    setPokemonCount(pokemonsParties.length)
+    setPokemonCount(pokemonsParties.filter((pokemon) => pokemon.isExist).length)
   }, [pokemonsParties])
 
   return (
     <Container className="relative">
       <Grid>
-        <div className="col-span-full lg:col-start-2 lg:col-span-2 flex flex-col lg:min-h-[calc(100vh-300px)]">
-          <div className="flex-grow flex items-center relative">
+        <div className="lg:sticky top-5 col-span-full lg:col-start-2 lg:col-span-2 flex flex-col lg:min-h-[calc(100vh-300px)]">
+          <div className="flex-grow flex justify-between items-center lg:items-start lg:mt-20 relative">
             <H1>
-              Ash's <br />
+              Ash's <br className="hidden lg:block" />
               party
             </H1>
+            <H3
+              as="p"
+              className="lg:hidden"
+            >{`${pokemonCount}/${PARTY_LENGTH}`}</H3>
           </div>
         </div>
         <div className="col-span-full lg:col-span-6">
@@ -38,7 +42,9 @@ export default function PartyPage() {
                     <Card
                       key={i}
                       type={
-                        pokemonsParties[i]?.isExist ? CARDTYPE.PARTY : CARDTYPE.EMPTY
+                        pokemonsParties[i]?.isExist
+                          ? CARDTYPE.PARTY
+                          : CARDTYPE.EMPTY
                       }
                       {...pokemonsParties[i]}
                     />
@@ -51,8 +57,11 @@ export default function PartyPage() {
             </div>
           )}
         </div>
-        <div className="col-start-11 text-center">
-          <H3 as="p">{`${pokemonCount}/${PARTY_LENGTH}`}</H3>
+        <div className="col-start-11 text-center flex flex-col items-center justify-between">
+          <H3
+            as="p"
+            className="hidden lg:block lg:mt-20"
+          >{`${pokemonCount}/${PARTY_LENGTH}`}</H3>
           <Link
             href="/"
             passHref

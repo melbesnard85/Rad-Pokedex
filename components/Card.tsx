@@ -65,24 +65,25 @@ export default function Card({
         <CloseIcon />
       </button>
 
-      <Image
-        src={type === CARDTYPE.EMPTY ? "/img/placeholder-ball.png" : image}
-        alt={name}
-        className={clsx(
-          "pixel-art z-10 absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2",
-          type !== CARDTYPE.EMPTY && "-mt-[10px]"
-        )}
-        width="150"
-        height="150"
-        unoptimized
-        onClick={() =>
-          type === CARDTYPE.LIST &&
-          dispatch(setPokemon({ id, name, types, image }))
-        }
-      />
+      <div className="z-10 absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[114px] h-[114px] lg:w-[150px] lg:h-[150px]">
+        <Image
+          src={type === CARDTYPE.EMPTY ? "/img/placeholder-ball.png" : image}
+          alt={name}
+          className={clsx(
+            "pixel-art absolute",
+            type !== CARDTYPE.EMPTY && "-mt-[10px]"
+          )}
+          fill
+          unoptimized
+          onClick={() =>
+            type === CARDTYPE.LIST &&
+            dispatch(setPokemon({ id, name, types, image }))
+          }
+        />
+      </div>
 
       {type === CARDTYPE.EMPTY ? (
-        <div className="rounded-xl flex items-center justify-center h-[200px] shadow-card overflow-hidden p-2 border-2 border-white bg-[#F9F9F9]">
+        <div className="rounded-xl flex items-center justify-center h-[180px] lg:h-[200px] shadow-card overflow-hidden p-2 border-2 border-white bg-[#F9F9F9]">
           <button
             className="z-30 w-[75px] h-[75px] rounded-full bg-[#F8F8F8] border flex items-center justify-center border-white p-2 active:scale-95 hover:scale-110 shadow-card transition-all"
             onClick={() => dispatch(setPokemon({ id, name, types, image }))}
@@ -93,7 +94,7 @@ export default function Card({
       ) : (
         <div
           className={clsx(
-            "relative rounded-xl text-center flex flex-col item-center justify-end h-[200px] shadow-card overflow-hidden p-2",
+            "relative rounded-xl text-center flex flex-col item-center justify-end h-[180px] lg:h-[200px] shadow-card overflow-hidden p-2",
             storedItem && storedItem.isExist
               ? "border-4 border-[#107B6A]/40 bg-[#F3FFF4]"
               : "border-2 border-white bg-[#F9F9F9]",
@@ -104,7 +105,7 @@ export default function Card({
           {name !== undefined && (
             <div className="flex flex-col items-center gap-2">
               <div
-                className="inline-block rounded-full py-1 px-4 bg-[#3333331a] text-[#00000099]"
+                className="inline-block rounded-full py-1 px-4 bg-[#3333331a] text-[#00000099] text-[10px] lg:text-xs"
                 title={`Pokemon ID Number: ${id}`}
               >
                 #{id.toString().padStart(3, "0")}
@@ -120,7 +121,7 @@ export default function Card({
                     <li
                       className={clsx(
                         `bg-${type.toLowerCase()}`,
-                        "text-white rounded py-1 px-4 text-xs capitalize",
+                        "text-white rounded py-1 px-3 lg:px-4 text-[10px] lg:text-xs capitalize",
                         "inline-block"
                       )}
                       key={type}
